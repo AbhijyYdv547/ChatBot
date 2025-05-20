@@ -1,0 +1,18 @@
+ID: 1a2b3c4d-5678-1234-90ab-cdef12345678
+User ID: user-uuid-001
+Timestamp: 2025-05-20T10:30:00Z
+User Query: What is the capital of France?
+Bot Response: The capital of France is Paris.
+
+ID: 2b3c4d5e-6789-2345-01bc-def234567890
+User ID: user-uuid-001
+Timestamp: 2025-05-20T10:32:00Z
+User Query: Tell me a joke.
+Bot Response: Why don’t scientists trust atoms? Because they make up everything!
+
+ID: 3c4d5e6f-7890-3456-12cd-ef3456789012
+User ID: user-uuid-002
+Timestamp: 2025-05-20T10:34:00Z
+User Query: What is Supabase?
+Bot Response: Supabase is an open-source Firebase alternative.
+

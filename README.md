@@ -1,36 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 ChatBot App
 
-## Getting Started
+A modern full-stack chatbot application built using **Next.js**, **Supabase**, and the **Gemini API**, allowing users to:
 
-First, run the development server:
+- Authenticate securely  
+- Chat with the Gemini-powered bot  
+- Upload PDFs and query their content  
+- View previous conversations saved in a database  
+
+---
+
+## 📚 Features
+
+- 🔐 User Authentication (Login & Register) via Supabase  
+- 🧠 AI Chatbot powered by Gemini API  
+- 📄 Upload PDFs and interact with their content (Planned or Optional)  
+- 💬 Chat History saved per authenticated user  
+- 🗂 View historical chats in the sidebar  
+- 🌐 Responsive and Modern UI with TailwindCSS  
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js (App Router), TailwindCSS  
+- **Backend**: API Routes using Next.js  
+- **Database**: PostgreSQL (via Supabase)  
+- **Authentication**: Supabase Auth  
+- **AI API**: Gemini API by Google   
+
+---
+
+## 🧑‍💻 Setup Instructions
+
+### 1. Clone the Repo
+
+```bash
+git clone https://github.com/AbhijyYdv547/ChatBot.git
+cd ChatBot
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Environment Variables
+
+Create a `.env.local` file in the root directory with the following:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+### 4. Run the App Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🗃️ Database Setup
 
-## Learn More
+### Supabase Table: `chat_messages`
 
-To learn more about Next.js, take a look at the following resources:
+```sql
+create table chat_messages (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade,
+  user_query text not null,
+  bot_response text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-- Enable RLS
+alter table chat_messages enable row level security;
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+-- Allow user to insert their own messages
+create policy "Insert own chats"
+  on chat_messages
+  for insert
+  with check (auth.uid() = user_id);
 
-## Deploy on Vercel
+-- Allow user to select only their own chats
+create policy "Select own chats"
+  on chat_messages
+  for select
+  using (auth.uid() = user_id);
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📂 Folder Structure
+
+```
+/app
+  └── page.tsx             # Homepage
+  └── chat/page.tsx        # Main Chat UI
+  └── auth/
+      ├── login/page.tsx
+      └── register/page.tsx
+  └── api/
+      ├── chat/route.ts
+      └── history/route.ts
+      └── pdf/route.ts
+/lib
+  ├── supabaseClient.ts
+  ├── supabaseServer.ts
+  ├── gemini.ts
+  └── pdfUtils.ts
+
+/middleware
+  └── middleware.ts
+
+/utils
+  └── middlewareClients.ts
+
+/database
+  └── schema.sql
+
+/sample-chat
+  └── chat-history.txt
+
+
+```
+---
+
+## 📄 Sample Files
+
+Included:
+
+- [`chat-history.txt`](./sample-chat/chat-history.txt)   
+
+These represent a set of sample interactions between users and the chatbot.
+
+---
+
+## 📌 TODO / Improvements
+
+- [ ] Better error handling & user feedback  
+- [ ] Export chat history to file  
+- [ ] Light/Dark mode toggle  
+
+---
+
+## 🧾 License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+## 📬 Contact
+
+Made with ❤️ by [@AbhijyYdv547](https://github.com/AbhijyYdv547)
