@@ -1,14 +1,25 @@
 'use client'
 
+
 import { useState, useRef, useEffect } from 'react'
 import ChatMessage from '@/components/ChatMessage'
 import PdfUploader from '@/components/PdfUploader'
+import { createClient } from '@/lib/supabaseClient'
+
+type ChatHistoryItem = {
+  user_query: string
+  bot_response: string
+  created_at: string
+}
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<{ user: string, bot: string }[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const supabase = createClient()
+
+  const [history, setHistory] = useState<ChatHistoryItem[]>([])
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -31,6 +42,23 @@ export default function ChatPage() {
   }
 
   useEffect(() => {
+    const fetchHistory = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+  
+      if (user) {
+        const res = await fetch('/api/history')
+        const result = await res.json()
+        if (res.ok) {
+          setHistory(result.history)
+        }
+      }
+    }
+  
+    fetchHistory()
+  }, [])
+
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
@@ -40,6 +68,25 @@ export default function ChatPage() {
         🤖 Chatbot
       </header>
 
+      <aside className="w-64 bg-gray-800 border-r border-gray-700 overflow-y-auto p-4">
+  <h2 className="text-lg font-semibold mb-4">🕘 Chat History</h2>
+  {history.length === 0 ? (
+    <p className="text-sm text-gray-400">No history yet.</p>
+  ) : (
+    <ul className="space-y-3">
+      {history.map((item, index) => (
+        <li key={index} className="bg-gray-700 p-3 rounded hover:bg-gray-600 transition">
+          <p className="text-sm text-blue-400 truncate">{item.user_query}</p>
+          <p className="text-xs text-gray-400">{new Date(item.created_at).toLocaleString()}</p>
+        </li>
+      ))}
+    </ul>
+  )}
+</aside>
+
+
+
+  <main className="flex-1 flex flex-col">
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
         {messages.map((msg, i) => (
           <ChatMessage key={i} user={msg.user} bot={msg.bot} />
@@ -71,6 +118,7 @@ export default function ChatPage() {
           ✅ Text extracted from PDF. You can edit it before sending.
         </p>
       )}
+  </main>
     </div>
   )
 }
