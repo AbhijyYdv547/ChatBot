@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import pdfParse from 'pdf-parse'
+import { extractTextFromPDF } from '@/lib/pdfUtils'
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData()
@@ -13,10 +13,10 @@ export async function POST(req: NextRequest) {
   const buffer = Buffer.from(arrayBuffer)
 
   try {
-    const data = await pdfParse(buffer)
-    return NextResponse.json({ text: data.text })
-  } catch (error) {
-    console.error('PDF parse error:', error)
-    return NextResponse.json({ error: 'Failed to parse PDF' }, { status: 500 })
+    const text = await extractTextFromPDF(buffer)
+    return NextResponse.json({ text })
+  } catch (error: any) {
+    console.error('PDF extract error:', error)
+    return NextResponse.json({ error: 'Failed to extract text from PDF', details: error.message }, { status: 500 })
   }
 }
