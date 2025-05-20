@@ -5,6 +5,7 @@ export async function POST(req: NextRequest) {
   const formData = await req.formData()
   const file = formData.get('file')
 
+    // Check for file validity
   if (!file || !(file instanceof Blob)) {
     return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
   }

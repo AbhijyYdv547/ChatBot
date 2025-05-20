@@ -1,10 +1,11 @@
-// lib/gemini.ts
-import { GoogleGenAI } from "@google/genai"; // Or GoogleGenerativeAI if that's the correct class name
+
+import { GoogleGenAI } from "@google/genai"; 
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY!,
 });
 
+// calls gemini api to get response
 export async function getGeminiResponse(prompt: string): Promise<string> {
   if (!prompt || prompt.trim() === '') {
     return "I can't generate a response for an empty query. Please provide some text.";
@@ -16,9 +17,9 @@ export async function getGeminiResponse(prompt: string): Promise<string> {
       contents: [{ text: prompt }],
     });
 
-    // CORRECTED LINE: Access .text as a property, not a method
+
     if (result && result.text) { // Check if 'result' and 'result.text' property exist
-      return result.text; // Access directly without ()
+      return result.text; 
     } else {
       console.error("Gemini API response or text property was undefined/null:", result);
       return "I encountered an issue getting a text response from the AI. Please try again.";

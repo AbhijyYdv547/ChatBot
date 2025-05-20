@@ -1,4 +1,4 @@
-
+// Renders user and bot message in bubble format
 type ChatMessageProps = {
     user: string
     bot: string

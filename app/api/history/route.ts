@@ -4,6 +4,7 @@ import { createSupabaseServerClient } from '@/lib/supabaseServer'
 export async function GET() {
   const supabase = createSupabaseServerClient()
 
+   // Get current session
   const {
     data: { session },
     error: sessionError
@@ -13,6 +14,7 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+   // Fetch messages from Supabase DB
   const { data, error } = await supabase
     .from('chat_messages')
     .select('user_query, bot_response, created_at')

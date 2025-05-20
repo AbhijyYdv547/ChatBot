@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabaseClient'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+
+// Register page using Supabase Auth
 export default function RegisterPage() {
   const supabase = createClient()
   const router = useRouter()

@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabaseClient'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+
+// Login page with Supabase auth
 export default function LoginPage() {
   const supabase = createClient()
   const router = useRouter()

@@ -1,4 +1,4 @@
-// components/PdfUploader.tsx
+
 type PdfUploaderProps = {
     setInput: (text: string) => void
     uploading: boolean
@@ -6,6 +6,7 @@ type PdfUploaderProps = {
     loading: boolean
   }
   
+  // pdf uploading function 
   export default function PdfUploader({ setInput, uploading, setUploading, loading }: PdfUploaderProps) {
     const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!e.target.files?.length) return

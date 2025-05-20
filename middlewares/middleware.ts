@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createMiddlewareSupabaseClient } from '@/utils/middlewareClient'
 
+// Middleware for the user authentication
 export async function middleware(req: NextRequest) {
   const { supabase, res } = createMiddlewareSupabaseClient(req);
 

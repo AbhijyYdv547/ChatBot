@@ -12,6 +12,7 @@ type ChatHistoryItem = {
   created_at: string
 }
 
+// Main chat interface with sidebar history
 export default function ChatPage() {
   const [messages, setMessages] = useState<{ user: string, bot: string }[]>([])
   const [input, setInput] = useState('')
@@ -42,6 +43,7 @@ export default function ChatPage() {
   }
 
   useEffect(() => {
+      // Load past chats from server
     const fetchHistory = async () => {
       const { data: { user } } = await supabase.auth.getUser()
   
@@ -59,6 +61,7 @@ export default function ChatPage() {
 
 
   useEffect(() => {
+        // Auto scroll to bottom
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
